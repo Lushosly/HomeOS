@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3f0e8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="homeOs">
+  <title>homeOs</title>
+  <style>
+    :root {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #22221f;
+      background: #f3f0e8;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    button { font: inherit; }
+    body.dark { background: #171815; color: #f6f3eb; }
+    .app {
+      min-height: 100vh;
+      padding: max(22px, env(safe-area-inset-top))
+               max(22px, env(safe-area-inset-right))
+               max(92px, env(safe-area-inset-bottom))
+               max(22px, env(safe-area-inset-left));
+      background: #f3f0e8;
+    }
+    body.dark .app { background: #171815; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin-bottom: 0; font-size: clamp(25px, 4vw, 42px); line-height: 1.05; }
+    h2 { margin-bottom: 0; font-size: 22px; }
+    .eyebrow {
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .13em;
+      opacity: .58;
+    }
+    .clock {
+      white-space: nowrap;
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 750;
+      letter-spacing: -.04em;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(220px, .75fr);
+      gap: 18px;
+    }
+    .side-column { display: grid; gap: 18px; }
+    .card {
+      padding: 21px;
+      border: 1px solid rgba(30,30,25,.1);
+      border-radius: 22px;
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 12px 35px rgba(35,32,22,.07);
+    }
+    body.dark .card {
+      border-color: rgba(255,255,255,.09);
+      background: #23241f;
+      box-shadow: none;
+    }
+    .card-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .count {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: #ded8c7;
+      font-weight: 800;
+    }
+    body.dark .count { background: #34362f; }
+    .event-list { display: grid; gap: 10px; margin: 22px 0; }
+    .event {
+      display: flex;
+      min-height: 64px;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 15px;
+      background: rgba(30,30,25,.045);
+    }
+    body.dark .event { background: rgba(255,255,255,.045); }
+    .event-marker {
+      width: 7px;
+      align-self: stretch;
+      border-radius: 99px;
+    }
+    .personal { background: #5478b7; }
+    .family { background: #ba765d; }
+    .work { background: #668c68; }
+    .event-content { display: grid; gap: 4px; }
+    .event-content strong { font-size: 18px; }
+    .event-content span { opacity: .65; }
+    .primary-button, .secondary-button, .bottom-nav button {
+      min-height: 50px;
+      border: 0;
+      border-radius: 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .primary-button {
+      width: 100%;
+      background: #22221f;
+      color: #fff;
+      font-weight: 750;
+    }
+    body.dark .primary-button { background: #f2eee3; color: #171815; }
+    .secondary-button {
+      width: 100%;
+      padding: 0 16px;
+      background: #ded8c7;
+      color: #22221f;
+      font-weight: 700;
+    }
+    .weather-main { display: flex; align-items: center; gap: 12px; margin: 16px 0 8px; }
+    .weather-main strong { font-size: 52px; }
+    .weather-icon { font-size: 42px; }
+    .weather-card > p:last-child { margin-bottom: 0; opacity: .65; }
+    .settings-card h2 { margin-bottom: 20px; }
+    .bottom-nav {
+      position: fixed;
+      z-index: 10;
+      right: 18px;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      left: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      max-width: 680px;
+      margin: auto;
+      padding: 7px;
+      border: 1px solid rgba(30,30,25,.1);
+      border-radius: 18px;
+      background: rgba(248,246,239,.94);
+    }
+    body.dark .bottom-nav {
+      border-color: rgba(255,255,255,.1);
+      background: rgba(35,36,31,.96);
+    }
+    .bottom-nav button { background: transparent; color: inherit; font-weight: 700; }
+    .bottom-nav button.active { background: #22221f; color: #fff; }
+    body.dark .bottom-nav button.active { background: #f2eee3; color: #171815; }
+    @media (max-width: 720px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .side-column { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .app { padding-left: 15px; padding-right: 15px; }
+      .topbar { display: block; }
+      .clock { margin-top: 8px; }
+      .side-column { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">HOMEOS</p>
+        <h1 id="date">Loading date…</h1>
+      </div>
+      <div class="clock" id="clock">--:--</div>
+    </header>
+
+    <section class="dashboard">
+      <article class="card agenda-card">
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">TODAY</p>
+            <h2>Upcoming events</h2>
+          </div>
+          <span class="count">3</span>
+        </div>
+
+        <div class="event-list">
+          <div class="event">
+            <span class="event-marker personal"></span>
+            <div class="event-content"><strong>Morning walk</strong><span>8:00 AM</span></div>
+          </div>
+          <div class="event">
+            <span class="event-marker work"></span>
+            <div class="event-content"><strong>Project check-in</strong><span>10:30 AM</span></div>
+          </div>
+          <div class="event">
+            <span class="event-marker family"></span>
+            <div class="event-content"><strong>Pick up groceries</strong><span>4:15 PM</span></div>
+          </div>
+        </div>
+
+        <button class="primary-button" id="add-event" type="button">+ Add event</button>
+      </article>
+
+      <aside class="side-column">
+        <article class="card weather-card">
+          <p class="eyebrow">WEATHER</p>
+          <div class="weather-main"><span class="weather-icon">☀</span><strong>82°</strong></div>
+          <p>Clear skies · Demo data</p>
+        </article>
+
+        <article class="card settings-card">
+          <p class="eyebrow">DISPLAY</p>
+          <h2>Appearance</h2>
+          <button class="secondary-button" id="theme-toggle" type="button">Use dark mode</button>
+        </article>
+      </aside>
+    </section>
+
+    <nav class="bottom-nav" aria-label="Dashboard navigation">
+      <button class="active" type="button">Today</button>
+      <button type="button">Week</button>
+      <button type="button">Tasks</button>
+      <button type="button">Settings</button>
+    </nav>
+  </main>
+
+  <script>
+    (function () {
+      var dateEl = document.getElementById("date");
+      var clockEl = document.getElementById("clock");
+      var themeButton = document.getElementById("theme-toggle");
+      var addButton = document.getElementById("add-event");
+
+      function updateClock() {
+        var now = new Date();
+        dateEl.textContent = now.toLocaleDateString("en-US", {
+          weekday: "long", month: "long", day: "numeric", year: "numeric"
+        });
+        clockEl.textContent = now.toLocaleTimeString("en-US", {
+          hour: "numeric", minute: "2-digit"
+        });
+      }
+
+      function setDarkMode(enabled) {
+        document.body.classList.toggle("dark", enabled);
+        themeButton.textContent = enabled ? "Use light mode" : "Use dark mode";
+        localStorage.setItem("homeOs-dark-mode", enabled ? "1" : "0");
+      }
+
+      themeButton.addEventListener("click", function () {
+        setDarkMode(!document.body.classList.contains("dark"));
+      });
+
+      addButton.addEventListener("click", function () {
+        alert("Event editing will be added in the next version.");
+      });
+
+      setDarkMode(localStorage.getItem("homeOs-dark-mode") === "1");
+      updateClock();
+      setInterval(updateClock, 30000);
+    }());
+  </script>
+</body>
+</html>
