@@ -8,615 +8,116 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="HomeOS">
   <title>HomeOS</title>
-
-  <style>
-    :root {
-      --bg: #f3f0e8;
-      --surface: #ffffff;
-      --surface-2: #ece8dc;
-      --text: #20211e;
-      --muted: #71736e;
-      --border: rgba(30, 31, 28, .12);
-      --accent: #3f79d8;
-      --accent-soft: rgba(63, 121, 216, .16);
-      --danger: #c94d4d;
-      --shadow: 0 12px 28px rgba(25, 27, 23, .08);
-      --radius: 22px;
-      --font-scale: 1;
-    }
-
-    body.dark {
-      --bg: #11130f;
-      --surface: #1d201a;
-      --surface-2: #292d25;
-      --text: #f4f1e8;
-      --muted: #aaa9a3;
-      --border: rgba(255,255,255,.11);
-      --accent-soft: rgba(77, 139, 240, .19);
-      --shadow: none;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      min-height: 100%;
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: calc(16px * var(--font-scale));
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    button, input, select, textarea {
-      font: inherit;
-    }
-
-    button {
-      color: inherit;
-    }
-
-    .app {
-      min-height: 100vh;
-      padding:
-        max(24px, env(safe-area-inset-top))
-        max(18px, env(safe-area-inset-right))
-        calc(104px + env(safe-area-inset-bottom))
-        max(18px, env(safe-area-inset-left));
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-
-    .brand {
-      margin: 0 0 8px;
-      font-size: .75rem;
-      font-weight: 850;
-      letter-spacing: .16em;
-      color: var(--muted);
-    }
-
-    h1, h2, h3, p {
-      margin-top: 0;
-    }
-
-    h1 {
-      margin-bottom: 0;
-      font-size: clamp(1.65rem, 5vw, 2.7rem);
-      line-height: 1.05;
-      letter-spacing: -.035em;
-    }
-
-    h2 {
-      margin-bottom: 0;
-      font-size: 1.35rem;
-      letter-spacing: -.02em;
-    }
-
-    .clock {
-      flex: 0 0 auto;
-      font-size: clamp(1.65rem, 5vw, 2.75rem);
-      font-weight: 800;
-      letter-spacing: -.04em;
-      white-space: nowrap;
-    }
-
-    .page {
-      display: none;
-      animation: fadeIn .16s ease-out;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: .55; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(230px, .8fr);
-      gap: 16px;
-    }
-
-    .stack {
-      display: grid;
-      gap: 16px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .card-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .eyebrow {
-      margin-bottom: 6px;
-      color: var(--muted);
-      font-size: .72rem;
-      font-weight: 850;
-      letter-spacing: .14em;
-    }
-
-    .badge {
-      min-width: 40px;
-      height: 40px;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      background: var(--surface-2);
-      font-weight: 800;
-    }
-
-    .event-list, .task-list, .week-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .event {
-      display: grid;
-      grid-template-columns: 8px 1fr auto;
-      gap: 14px;
-      align-items: center;
-      min-height: 70px;
-      padding: 13px 14px;
-      background: var(--surface-2);
-      border-radius: 16px;
-    }
-
-    .event-bar {
-      align-self: stretch;
-      border-radius: 999px;
-      background: var(--accent);
-    }
-
-    .event-main {
-      min-width: 0;
-    }
-
-    .event-title {
-      display: block;
-      font-size: 1.08rem;
-      font-weight: 780;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .event-time, .muted {
-      color: var(--muted);
-    }
-
-    .icon-button {
-      min-width: 44px;
-      min-height: 44px;
-      border: 0;
-      border-radius: 12px;
-      background: transparent;
-      font-size: 1.15rem;
-      touch-action: manipulation;
-    }
-
-    .icon-button:active {
-      background: var(--accent-soft);
-    }
-
-    .primary, .secondary, .danger {
-      min-height: 52px;
-      border: 0;
-      border-radius: 15px;
-      padding: 0 18px;
-      font-weight: 780;
-      touch-action: manipulation;
-    }
-
-    .primary {
-      width: 100%;
-      margin-top: 16px;
-      background: var(--accent);
-      color: white;
-    }
-
-    .secondary {
-      background: var(--surface-2);
-      color: var(--text);
-    }
-
-    .danger {
-      background: rgba(201,77,77,.14);
-      color: var(--danger);
-    }
-
-    .weather {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      margin: 12px 0;
-    }
-
-    .weather-icon {
-      font-size: 3rem;
-    }
-
-    .weather-temp {
-      font-size: 3.4rem;
-      font-weight: 820;
-      letter-spacing: -.06em;
-    }
-
-    .empty {
-      padding: 30px 12px;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .week-day {
-      display: grid;
-      grid-template-columns: 68px 1fr;
-      gap: 12px;
-      align-items: start;
-      padding: 14px;
-      border-radius: 16px;
-      background: var(--surface-2);
-    }
-
-    .week-date {
-      font-weight: 800;
-    }
-
-    .week-events {
-      display: grid;
-      gap: 7px;
-    }
-
-    .week-event {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .task-row {
-      display: grid;
-      grid-template-columns: 44px 1fr 44px;
-      align-items: center;
-      min-height: 62px;
-      border-radius: 15px;
-      background: var(--surface-2);
-      overflow: hidden;
-    }
-
-    .task-check {
-      width: 25px;
-      height: 25px;
-      margin: auto;
-      accent-color: var(--accent);
-    }
-
-    .task-text {
-      padding: 8px 0;
-      font-weight: 680;
-    }
-
-    .task-row.completed .task-text {
-      color: var(--muted);
-      text-decoration: line-through;
-    }
-
-    .settings-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .setting-row {
-      display: grid;
-      gap: 12px;
-    }
-
-    .segmented {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .segmented button, .theme-choice {
-      min-height: 48px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: var(--surface-2);
-      font-weight: 720;
-    }
-
-    .segmented button.selected, .theme-choice.selected {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-    }
-
-    .theme-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .color-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .color-dot {
-      width: 44px;
-      height: 44px;
-      border: 3px solid transparent;
-      border-radius: 50%;
-    }
-
-    .color-dot.selected {
-      border-color: var(--text);
-      box-shadow: inset 0 0 0 3px var(--surface);
-    }
-
-    .bottom-nav {
-      position: fixed;
-      z-index: 30;
-      left: max(14px, env(safe-area-inset-left));
-      right: max(14px, env(safe-area-inset-right));
-      bottom: max(12px, env(safe-area-inset-bottom));
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 7px;
-      max-width: 720px;
-      margin: auto;
-      padding: 7px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      background: color-mix(in srgb, var(--surface) 93%, transparent);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .bottom-nav button {
-      min-height: 54px;
-      border: 0;
-      border-radius: 15px;
-      background: transparent;
-      font-weight: 760;
-    }
-
-    .bottom-nav button.active {
-      background: var(--accent-soft);
-      color: var(--accent);
-    }
-
-    dialog {
-      width: min(92vw, 520px);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 0;
-      background: var(--surface);
-      color: var(--text);
-      box-shadow: 0 25px 70px rgba(0,0,0,.3);
-    }
-
-    dialog::backdrop {
-      background: rgba(0,0,0,.48);
-      backdrop-filter: blur(3px);
-    }
-
-    .modal {
-      padding: 22px;
-    }
-
-    .modal h2 {
-      margin-bottom: 18px;
-    }
-
-    .form-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    label {
-      display: grid;
-      gap: 7px;
-      font-weight: 700;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      min-height: 50px;
-      padding: 11px 13px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: var(--surface-2);
-      color: var(--text);
-    }
-
-    .modal-actions {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .toast {
-      position: fixed;
-      z-index: 50;
-      left: 50%;
-      bottom: calc(92px + env(safe-area-inset-bottom));
-      transform: translate(-50%, 18px);
-      padding: 12px 16px;
-      border-radius: 13px;
-      background: var(--text);
-      color: var(--bg);
-      font-weight: 700;
-      opacity: 0;
-      pointer-events: none;
-      transition: .18s ease;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    @media (max-width: 760px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stack {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .app {
-        padding-left: 14px;
-        padding-right: 14px;
-      }
-
-      .topbar {
-        display: block;
-      }
-
-      .clock {
-        margin-top: 8px;
-      }
-
-      .stack, .settings-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .bottom-nav button {
-        font-size: .88rem;
-      }
-    }
-
-    @supports not (color: color-mix(in srgb, white 50%, black)) {
-      .bottom-nav {
-        background: var(--surface);
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/widgets.css">
 </head>
-
 <body>
-  <main class="app">
+  <div id="app">
     <header class="topbar">
       <div>
-        <p class="brand">HOMEOS</p>
-        <h1 id="dateLabel">Loading…</h1>
+        <p class="brand">HOMEOS <span id="versionLabel">v0.3</span></p>
+        <h1 id="pageTitle">Today</h1>
+        <p class="date-label" id="dateLabel">Loading date…</p>
       </div>
-      <div class="clock" id="clockLabel">--:--</div>
+      <div class="clock-panel">
+        <strong id="clockLabel">--:--</strong>
+        <span id="greetingLabel">Welcome home</span>
+      </div>
     </header>
 
-    <section id="todayPage" class="page active">
-      <div class="grid">
-        <article class="card">
-          <div class="card-head">
-            <div>
-              <p class="eyebrow">TODAY</p>
-              <h2>Upcoming events</h2>
-            </div>
-            <span class="badge" id="eventCount">0</span>
-          </div>
-
-          <div id="todayEvents" class="event-list"></div>
-          <button class="primary" data-open-event-modal>+ Add event</button>
-        </article>
-
-        <div class="stack">
-          <article class="card">
-            <p class="eyebrow">WEATHER</p>
-            <div class="weather">
-              <span class="weather-icon">☀️</span>
-              <span class="weather-temp">82°</span>
-            </div>
-            <p class="muted">Clear skies · Demo data</p>
-          </article>
-
-          <article class="card">
-            <p class="eyebrow">QUICK ACTIONS</p>
-            <div class="setting-row">
-              <button class="secondary" data-open-task-modal>+ Add task</button>
-              <button class="secondary" data-nav="settings">Customize display</button>
-            </div>
-          </article>
+    <section class="page active" id="homePage" aria-label="Home dashboard">
+      <div class="dashboard-toolbar">
+        <div>
+          <p class="eyebrow">DASHBOARD</p>
+          <h2>Your widgets</h2>
         </div>
+        <button class="toolbar-button" id="editDashboardButton">Edit dashboard</button>
       </div>
-    </section>
 
-    <section id="weekPage" class="page">
-      <article class="card">
+      <div class="edit-banner hidden" id="editBanner">
+        <strong>Edit mode</strong>
+        <span>Use the arrows on each widget to reorder it. Hide widgets you do not need.</span>
+        <button id="finishEditingButton">Done</button>
+      </div>
+
+      <div class="widget-grid" id="widgetGrid"></div>
+
+      <section class="widget-library hidden" id="widgetLibrary">
         <div class="card-head">
           <div>
-            <p class="eyebrow">NEXT 7 DAYS</p>
-            <h2>Week overview</h2>
+            <p class="eyebrow">WIDGET LIBRARY</p>
+            <h2>Add hidden widgets</h2>
           </div>
-          <button class="secondary" data-open-event-modal>+ Event</button>
         </div>
-        <div id="weekList" class="week-list"></div>
+        <div id="hiddenWidgetList" class="library-list"></div>
+      </section>
+    </section>
+
+    <section class="page" id="calendarPage" aria-label="Calendar">
+      <article class="panel">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">CALENDAR</p>
+            <h2>Next seven days</h2>
+          </div>
+          <button class="toolbar-button" data-open-event-modal>Add event</button>
+        </div>
+        <div id="calendarList" class="calendar-list"></div>
       </article>
     </section>
 
-    <section id="tasksPage" class="page">
-      <article class="card">
+    <section class="page" id="tasksPage" aria-label="Tasks">
+      <article class="panel">
         <div class="card-head">
           <div>
             <p class="eyebrow">TASKS</p>
             <h2>Your checklist</h2>
           </div>
-          <span class="badge" id="taskCount">0</span>
+          <span class="count-badge" id="taskCount">0</span>
         </div>
-        <div id="taskList" class="task-list"></div>
-        <button class="primary" data-open-task-modal>+ Add task</button>
+        <div id="fullTaskList" class="task-list"></div>
+        <button class="primary-button" data-open-task-modal>Add task</button>
       </article>
     </section>
 
-    <section id="settingsPage" class="page">
+    <section class="page" id="notesPage" aria-label="Notes">
+      <article class="panel">
+        <div class="card-head">
+          <div>
+            <p class="eyebrow">NOTES</p>
+            <h2>Quick notes</h2>
+          </div>
+          <button class="toolbar-button" data-open-note-modal>Add note</button>
+        </div>
+        <div id="fullNoteList" class="note-grid"></div>
+      </article>
+    </section>
+
+    <section class="page" id="settingsPage" aria-label="Settings">
       <div class="settings-grid">
-        <article class="card">
+        <article class="panel">
           <p class="eyebrow">APPEARANCE</p>
           <h2>Theme</h2>
-          <div class="theme-grid" style="margin-top:16px">
-            <button class="theme-choice" data-theme="light">Light</button>
-            <button class="theme-choice" data-theme="dark">Dark</button>
+          <div class="choice-grid two" id="themeChoices">
+            <button data-theme="light">Light</button>
+            <button data-theme="dark">Dark</button>
           </div>
         </article>
 
-        <article class="card">
+        <article class="panel">
           <p class="eyebrow">TEXT</p>
           <h2>Font size</h2>
-          <div class="segmented" style="margin-top:16px">
+          <div class="choice-grid three" id="fontChoices">
             <button data-font="0.9">Small</button>
             <button data-font="1">Normal</button>
             <button data-font="1.12">Large</button>
           </div>
         </article>
 
-        <article class="card">
+        <article class="panel">
           <p class="eyebrow">ACCENT</p>
           <h2>Interface color</h2>
-          <div class="color-row" style="margin-top:16px">
+          <div class="color-row">
             <button class="color-dot" data-color="#3f79d8" style="background:#3f79d8" aria-label="Blue"></button>
             <button class="color-dot" data-color="#5f9467" style="background:#5f9467" aria-label="Green"></button>
             <button class="color-dot" data-color="#8a61c7" style="background:#8a61c7" aria-label="Purple"></button>
@@ -625,463 +126,112 @@
           </div>
         </article>
 
-        <article class="card">
+        <article class="panel">
+          <p class="eyebrow">DASHBOARD</p>
+          <h2>Widget visibility</h2>
+          <p class="muted">Use Edit Dashboard on the Home screen to reorder or hide widgets.</p>
+          <button class="secondary-button" data-nav="home">Open dashboard editor</button>
+        </article>
+
+        <article class="panel danger-panel">
           <p class="eyebrow">DATA</p>
-          <h2>Reset demo</h2>
-          <p class="muted" style="margin:12px 0 16px">This clears events, tasks, and settings stored on this device.</p>
-          <button class="danger" id="resetButton">Reset HomeOS</button>
+          <h2>Reset HomeOS</h2>
+          <p class="muted">Clears events, tasks, notes, shopping items, widget layout, and settings stored on this device.</p>
+          <button class="danger-button" id="resetButton">Reset all data</button>
+        </article>
+
+        <article class="panel">
+          <p class="eyebrow">ABOUT</p>
+          <h2>HomeOS v0.3</h2>
+          <p class="muted">Local-first dashboard for your iPad mini 4. Calendar and weather integrations will be added later.</p>
         </article>
       </div>
     </section>
-  </main>
+  </div>
 
   <nav class="bottom-nav" aria-label="Main navigation">
-    <button class="active" data-nav="today">Today</button>
-    <button data-nav="week">Week</button>
-    <button data-nav="tasks">Tasks</button>
-    <button data-nav="settings">Settings</button>
+    <button class="active" data-nav="home"><span>⌂</span>Home</button>
+    <button data-nav="calendar"><span>▣</span>Calendar</button>
+    <button data-nav="tasks"><span>✓</span>Tasks</button>
+    <button data-nav="notes"><span>✎</span>Notes</button>
+    <button data-nav="settings"><span>⚙</span>Settings</button>
   </nav>
 
   <dialog id="eventDialog">
-    <form class="modal" id="eventForm" method="dialog">
-      <h2>Add event</h2>
-      <div class="form-grid">
-        <label>
-          Title
-          <input id="eventTitle" required maxlength="60" placeholder="Dentist appointment">
-        </label>
-
-        <label>
-          Date
-          <input id="eventDate" type="date" required>
-        </label>
-
-        <label>
-          Time
-          <input id="eventTime" type="time" required>
-        </label>
-
-        <label>
-          Color
-          <select id="eventColor">
-            <option value="#3f79d8">Blue</option>
-            <option value="#5f9467">Green</option>
-            <option value="#d07a5f">Orange</option>
-            <option value="#8a61c7">Purple</option>
-            <option value="#c84d58">Red</option>
-          </select>
-        </label>
+    <form class="modal" id="eventForm">
+      <div class="modal-head">
+        <h2>Add event</h2>
+        <button type="button" class="close-button" data-close-dialog>×</button>
       </div>
-
+      <label>Title<input id="eventTitle" required maxlength="70" placeholder="Dentist appointment"></label>
+      <label>Date<input id="eventDate" type="date" required></label>
+      <label>Time<input id="eventTime" type="time" required></label>
+      <label>Color
+        <select id="eventColor">
+          <option value="#3f79d8">Blue</option>
+          <option value="#5f9467">Green</option>
+          <option value="#d07a5f">Orange</option>
+          <option value="#8a61c7">Purple</option>
+          <option value="#c84d58">Red</option>
+        </select>
+      </label>
       <div class="modal-actions">
-        <button class="secondary" type="button" data-close-dialog>Cancel</button>
-        <button class="primary" style="margin:0" type="submit">Save event</button>
+        <button type="button" class="secondary-button" data-close-dialog>Cancel</button>
+        <button type="submit" class="primary-button">Save event</button>
       </div>
     </form>
   </dialog>
 
   <dialog id="taskDialog">
-    <form class="modal" id="taskForm" method="dialog">
-      <h2>Add task</h2>
-      <div class="form-grid">
-        <label>
-          Task
-          <input id="taskTitle" required maxlength="80" placeholder="Buy groceries">
-        </label>
+    <form class="modal" id="taskForm">
+      <div class="modal-head">
+        <h2>Add task</h2>
+        <button type="button" class="close-button" data-close-dialog>×</button>
       </div>
-
+      <label>Task<input id="taskTitle" required maxlength="90" placeholder="Buy groceries"></label>
       <div class="modal-actions">
-        <button class="secondary" type="button" data-close-dialog>Cancel</button>
-        <button class="primary" style="margin:0" type="submit">Save task</button>
+        <button type="button" class="secondary-button" data-close-dialog>Cancel</button>
+        <button type="submit" class="primary-button">Save task</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="noteDialog">
+    <form class="modal" id="noteForm">
+      <div class="modal-head">
+        <h2>Add note</h2>
+        <button type="button" class="close-button" data-close-dialog>×</button>
+      </div>
+      <label>Title<input id="noteTitle" required maxlength="60" placeholder="Reminder"></label>
+      <label>Note<textarea id="noteBody" rows="5" required maxlength="500" placeholder="Write something…"></textarea></label>
+      <div class="modal-actions">
+        <button type="button" class="secondary-button" data-close-dialog>Cancel</button>
+        <button type="submit" class="primary-button">Save note</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="shoppingDialog">
+    <form class="modal" id="shoppingForm">
+      <div class="modal-head">
+        <h2>Add shopping item</h2>
+        <button type="button" class="close-button" data-close-dialog>×</button>
+      </div>
+      <label>Item<input id="shoppingTitle" required maxlength="80" placeholder="Milk"></label>
+      <div class="modal-actions">
+        <button type="button" class="secondary-button" data-close-dialog>Cancel</button>
+        <button type="submit" class="primary-button">Save item</button>
       </div>
     </form>
   </dialog>
 
   <div class="toast" id="toast"></div>
 
-  <script>
-    (function () {
-      "use strict";
-
-      var STORAGE_KEY = "homeos-v02";
-
-      function isoDate(date) {
-        var y = date.getFullYear();
-        var m = String(date.getMonth() + 1).padStart(2, "0");
-        var d = String(date.getDate()).padStart(2, "0");
-        return y + "-" + m + "-" + d;
-      }
-
-      function plusDays(days) {
-        var date = new Date();
-        date.setDate(date.getDate() + days);
-        return isoDate(date);
-      }
-
-      var defaults = {
-        events: [
-          { id: 1, title: "Morning walk", date: plusDays(0), time: "08:00", color: "#3f79d8" },
-          { id: 2, title: "Project check-in", date: plusDays(0), time: "10:30", color: "#5f9467" },
-          { id: 3, title: "Pick up groceries", date: plusDays(0), time: "16:15", color: "#d07a5f" }
-        ],
-        tasks: [
-          { id: 1, title: "Buy groceries", completed: false },
-          { id: 2, title: "Charge iPad to 85%", completed: false }
-        ],
-        settings: {
-          theme: "dark",
-          fontScale: "1",
-          accent: "#3f79d8"
-        }
-      };
-
-      function cloneDefaults() {
-        return JSON.parse(JSON.stringify(defaults));
-      }
-
-      function loadState() {
-        try {
-          var stored = localStorage.getItem(STORAGE_KEY);
-          if (!stored) return cloneDefaults();
-          var parsed = JSON.parse(stored);
-          return {
-            events: Array.isArray(parsed.events) ? parsed.events : cloneDefaults().events,
-            tasks: Array.isArray(parsed.tasks) ? parsed.tasks : cloneDefaults().tasks,
-            settings: Object.assign({}, defaults.settings, parsed.settings || {})
-          };
-        } catch (error) {
-          return cloneDefaults();
-        }
-      }
-
-      var state = loadState();
-
-      var dateLabel = document.getElementById("dateLabel");
-      var clockLabel = document.getElementById("clockLabel");
-      var todayEvents = document.getElementById("todayEvents");
-      var eventCount = document.getElementById("eventCount");
-      var weekList = document.getElementById("weekList");
-      var taskList = document.getElementById("taskList");
-      var taskCount = document.getElementById("taskCount");
-      var eventDialog = document.getElementById("eventDialog");
-      var taskDialog = document.getElementById("taskDialog");
-      var eventForm = document.getElementById("eventForm");
-      var taskForm = document.getElementById("taskForm");
-      var toast = document.getElementById("toast");
-
-      function saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      }
-
-      function showToast(message) {
-        toast.textContent = message;
-        toast.classList.add("show");
-        window.setTimeout(function () {
-          toast.classList.remove("show");
-        }, 1800);
-      }
-
-      function updateClock() {
-        var now = new Date();
-        dateLabel.textContent = now.toLocaleDateString("en-US", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          year: "numeric"
-        });
-        clockLabel.textContent = now.toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit"
-        });
-      }
-
-      function timeLabel(value) {
-        var parts = value.split(":");
-        var date = new Date();
-        date.setHours(Number(parts[0]), Number(parts[1]), 0, 0);
-        return date.toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit"
-        });
-      }
-
-      function formatDay(dateValue) {
-        var date = new Date(dateValue + "T12:00:00");
-        return date.toLocaleDateString("en-US", {
-          weekday: "short",
-          month: "short",
-          day: "numeric"
-        });
-      }
-
-      function applySettings() {
-        document.body.classList.toggle("dark", state.settings.theme === "dark");
-        document.documentElement.style.setProperty("--font-scale", state.settings.fontScale);
-        document.documentElement.style.setProperty("--accent", state.settings.accent);
-        document.documentElement.style.setProperty("--accent-soft", hexToRgba(state.settings.accent, .17));
-
-        document.querySelectorAll("[data-theme]").forEach(function (button) {
-          button.classList.toggle("selected", button.dataset.theme === state.settings.theme);
-        });
-
-        document.querySelectorAll("[data-font]").forEach(function (button) {
-          button.classList.toggle("selected", button.dataset.font === state.settings.fontScale);
-        });
-
-        document.querySelectorAll("[data-color]").forEach(function (button) {
-          button.classList.toggle("selected", button.dataset.color === state.settings.accent);
-        });
-      }
-
-      function hexToRgba(hex, alpha) {
-        var value = hex.replace("#", "");
-        var r = parseInt(value.substring(0, 2), 16);
-        var g = parseInt(value.substring(2, 4), 16);
-        var b = parseInt(value.substring(4, 6), 16);
-        return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
-      }
-
-      function renderToday() {
-        var today = isoDate(new Date());
-        var events = state.events
-          .filter(function (event) { return event.date === today; })
-          .sort(function (a, b) { return a.time.localeCompare(b.time); });
-
-        eventCount.textContent = String(events.length);
-
-        if (!events.length) {
-          todayEvents.innerHTML = '<div class="empty">No events today. Tap “Add event” to create one.</div>';
-          return;
-        }
-
-        todayEvents.innerHTML = events.map(function (event) {
-          return [
-            '<div class="event">',
-              '<span class="event-bar" style="background:' + event.color + '"></span>',
-              '<div class="event-main">',
-                '<span class="event-title">' + escapeHtml(event.title) + '</span>',
-                '<span class="event-time">' + timeLabel(event.time) + '</span>',
-              '</div>',
-              '<button class="icon-button" data-delete-event="' + event.id + '" aria-label="Delete event">×</button>',
-            '</div>'
-          ].join("");
-        }).join("");
-      }
-
-      function renderWeek() {
-        var rows = [];
-
-        for (var index = 0; index < 7; index += 1) {
-          var date = new Date();
-          date.setDate(date.getDate() + index);
-          var key = isoDate(date);
-          var events = state.events
-            .filter(function (event) { return event.date === key; })
-            .sort(function (a, b) { return a.time.localeCompare(b.time); });
-
-          var eventHtml = events.length
-            ? events.map(function (event) {
-                return '<div class="week-event"><strong>' +
-                  escapeHtml(event.title) +
-                  '</strong><span class="muted">' +
-                  timeLabel(event.time) +
-                  '</span></div>';
-              }).join("")
-            : '<span class="muted">No events</span>';
-
-          rows.push(
-            '<div class="week-day">' +
-              '<div class="week-date">' + formatDay(key) + '</div>' +
-              '<div class="week-events">' + eventHtml + '</div>' +
-            '</div>'
-          );
-        }
-
-        weekList.innerHTML = rows.join("");
-      }
-
-      function renderTasks() {
-        taskCount.textContent = String(state.tasks.filter(function (task) {
-          return !task.completed;
-        }).length);
-
-        if (!state.tasks.length) {
-          taskList.innerHTML = '<div class="empty">No tasks yet. Add your first task.</div>';
-          return;
-        }
-
-        taskList.innerHTML = state.tasks.map(function (task) {
-          return [
-            '<div class="task-row ' + (task.completed ? 'completed' : '') + '">',
-              '<input class="task-check" type="checkbox" data-toggle-task="' + task.id + '"' +
-                (task.completed ? ' checked' : '') + '>',
-              '<span class="task-text">' + escapeHtml(task.title) + '</span>',
-              '<button class="icon-button" data-delete-task="' + task.id + '" aria-label="Delete task">×</button>',
-            '</div>'
-          ].join("");
-        }).join("");
-      }
-
-      function renderAll() {
-        applySettings();
-        renderToday();
-        renderWeek();
-        renderTasks();
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
-
-      function navigate(pageName) {
-        document.querySelectorAll(".page").forEach(function (page) {
-          page.classList.toggle("active", page.id === pageName + "Page");
-        });
-
-        document.querySelectorAll(".bottom-nav [data-nav]").forEach(function (button) {
-          button.classList.toggle("active", button.dataset.nav === pageName);
-        });
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      document.addEventListener("click", function (event) {
-        var target = event.target.closest("button");
-        if (!target) return;
-
-        if (target.dataset.nav) {
-          navigate(target.dataset.nav);
-        }
-
-        if (target.hasAttribute("data-open-event-modal")) {
-          document.getElementById("eventDate").value = isoDate(new Date());
-          document.getElementById("eventTime").value = "09:00";
-          document.getElementById("eventTitle").value = "";
-          eventDialog.showModal();
-        }
-
-        if (target.hasAttribute("data-open-task-modal")) {
-          document.getElementById("taskTitle").value = "";
-          taskDialog.showModal();
-        }
-
-        if (target.hasAttribute("data-close-dialog")) {
-          target.closest("dialog").close();
-        }
-
-        if (target.dataset.deleteEvent) {
-          state.events = state.events.filter(function (item) {
-            return String(item.id) !== target.dataset.deleteEvent;
-          });
-          saveState();
-          renderAll();
-          showToast("Event deleted");
-        }
-
-        if (target.dataset.deleteTask) {
-          state.tasks = state.tasks.filter(function (item) {
-            return String(item.id) !== target.dataset.deleteTask;
-          });
-          saveState();
-          renderAll();
-          showToast("Task deleted");
-        }
-
-        if (target.dataset.theme) {
-          state.settings.theme = target.dataset.theme;
-          saveState();
-          applySettings();
-        }
-
-        if (target.dataset.font) {
-          state.settings.fontScale = target.dataset.font;
-          saveState();
-          applySettings();
-        }
-
-        if (target.dataset.color) {
-          state.settings.accent = target.dataset.color;
-          saveState();
-          applySettings();
-        }
-      });
-
-      document.addEventListener("change", function (event) {
-        var target = event.target;
-
-        if (target.dataset && target.dataset.toggleTask) {
-          var task = state.tasks.find(function (item) {
-            return String(item.id) === target.dataset.toggleTask;
-          });
-
-          if (task) {
-            task.completed = target.checked;
-            saveState();
-            renderTasks();
-          }
-        }
-      });
-
-      eventForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        var title = document.getElementById("eventTitle").value.trim();
-        var date = document.getElementById("eventDate").value;
-        var time = document.getElementById("eventTime").value;
-        var color = document.getElementById("eventColor").value;
-
-        if (!title || !date || !time) return;
-
-        state.events.push({
-          id: Date.now(),
-          title: title,
-          date: date,
-          time: time,
-          color: color
-        });
-
-        saveState();
-        renderAll();
-        eventDialog.close();
-        showToast("Event saved");
-      });
-
-      taskForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        var title = document.getElementById("taskTitle").value.trim();
-        if (!title) return;
-
-        state.tasks.push({
-          id: Date.now(),
-          title: title,
-          completed: false
-        });
-
-        saveState();
-        renderTasks();
-        taskDialog.close();
-        showToast("Task saved");
-      });
-
-      document.getElementById("resetButton").addEventListener("click", function () {
-        if (!window.confirm("Reset all locally saved HomeOS data?")) return;
-        state = cloneDefaults();
-        saveState();
-        renderAll();
-        navigate("today");
-        showToast("HomeOS reset");
-      });
-
-      updateClock();
-      window.setInterval(updateClock, 30000);
-      renderAll();
-    }());
-  </script>
+  <script src="./js/storage.js"></script>
+  <script src="./js/widgets.js"></script>
+  <script src="./js/calendar.js"></script>
+  <script src="./js/tasks.js"></script>
+  <script src="./js/settings.js"></script>
+  <script src="./js/app.js"></script>
 </body>
 </html>
